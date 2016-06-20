@@ -4,45 +4,69 @@ function decode (inputVector, decodeVector, decodeHash) {
   console.log('Length of decode vector: ' + String(decodeVector.length))
   if (inputVector.length > decodeVector.length) {
     console.log('Warning: decoding array shorter than input vector. Leftmost bits of input array will not be decoded')
-    decodeVector = Array(inputVector.length-decodeVector.length).fill(0).concat(decodeVector)
+    decodeVector = Array(inputVector.length - decodeVector.length).fill(0).concat(decodeVector)
+    console.log('Decode Vector: ' + decodeVector)
   } else if (inputVector.length < decodeVector.length) {
     console.log('Warning: input vector shorter than decoding array. Padding the leftmost bits to 0')
     inputVector = Array(decodeVector.length - inputVector.length).fill(0).concat(inputVector)
+    console.log('Input Vector: ' + inputVector)
   }
 
   var arrayIndex = 0
   var decodeFunctionID = 0
-  var numBits = 0
-  var value = 0
+  var valueBinStr = ''
   while (arrayIndex < inputVector.length) {
     decodeFunctionID = decodeVector[arrayIndex]
     while ((arrayIndex < decodeVector.length) && (decodeVector[arrayIndex] === decodeFunctionID)) {
-      value += inputVector[arrayIndex]
+      valueBinStr += String(inputVector[arrayIndex])
       arrayIndex++
-      numBits++
     }
-    resultStr += decodeHash[decodeFunctionID] + ' [' + numBits.toString() + ']: ' + value.toString(2) + 'b = ' + value.toString() + '\n'
+    resultStr += decodeHash[decodeFunctionID] + ' [' + String(valueBinStr.length) + ']: ' + valueBinStr + 'b = ' + String(parseInt(valueBinStr,2)) + '\n'
     decodeFunctionID = 0
-    numBits = 0
-    value = 0
+    valueBinStr = ''
   }
 
   return resultStr
 }
 
+function createDecodeHash (inputStr) {
+  var decodeVector = []
+  var decodeHash = ['Undecoded bit(s)']
+
+  inputStr.split(/\r?\n/).forEach(function (line) {
+    var lineSplit = line.match(/\[(\d+):(\d+)\] (.*)/)
+    var startBit = parseInt(lineSplit[1])
+    var stopBit = parseInt(lineSplit[2])
+    var decodeStrID = decodeHash.length
+    decodeHash[decodeStrID] = lineSplit[3]
+    if (Math.max(startBit, stopBit) > decodeVector.length-1) {
+        decodeVector = Array((Math.max(startBit, stopBit) + 1) - decodeVector.length).fill(0).concat(decodeVector)
+    }
+    var sequenceLength = Math.abs(startBit - stopBit) + 1
+    Array.prototype.splice.apply(decodeVector,[Math.min(startBit, stopBit),sequenceLength].concat(Array(sequenceLength).fill(decodeStrID)))
+  })
+  console.log(decodeVector)
+  console.log(decodeHash)
+  return [decodeVector, decodeHash]
+}
+
 function test () {
+  var testStr = '[7:5] first field\n[4:4] second field\n[3:0] third field'
+  // var testDecodeVector = [1, 1, 1, 2, 3, 3, 3, 3]
+  // var testDecodeHash = {1: 'first field', 2: 'second field', 3: 'third field'}
+  var testDecodeAr = createDecodeHash(testStr)
+  var testDecodeVector = testDecodeAr[0]
+  var testDecodeHash = testDecodeAr[1]
+  console.log(testDecodeVector)
+  console.log(testDecodeHash)
+  // Test input vector long as decoder
+  console.log(decode([0, 0, 1, 1, 0, 0, 1, 1], testDecodeVector, testDecodeHash))
 
-  test_decodeVector = [1, 1, 1, 2, 3, 3, 3, 3]
-  test_decodeHash = {1: 'first field', 2: 'second field', 3: 'third field'}
-  //#Test input vector long as decoder
-  console.log(decode([0, 0, 1, 1, 0, 0, 1, 1], test_decodeVector, test_decodeHash))
+  // Test input vector longer than decoder
+  console.log(decode([0, 0, 1, 1, 0, 0, 1, 1, 1], testDecodeVector, testDecodeHash))
 
-  //Test input vector longer than decoder
-  console.log(decode([0, 0, 1, 1, 0, 0, 1, 1, 1], test_decodeVector, test_decodeHash))
-
-  //Test input smaller than decoder
-  console.log(decode([0, 0, 1, 1, 0, 1], test_decodeVector, test_decodeHash))
-
+  // Test input smaller than decoder
+  console.log(decode([0, 0, 1, 1, 0, 1], testDecodeVector, testDecodeHash))
 }
 
 test()
