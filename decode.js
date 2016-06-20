@@ -1,5 +1,5 @@
 function decode (inputVector, decodeVector, decodeHash) {
-  var resultStr = ''
+  var resultStr = []
   console.log('Length of input vector:' + String(inputVector.length))
   console.log('Length of decode vector: ' + String(decodeVector.length))
   if (inputVector.length > decodeVector.length) {
@@ -21,7 +21,7 @@ function decode (inputVector, decodeVector, decodeHash) {
       valueBinStr += String(inputVector[arrayIndex])
       arrayIndex++
     }
-    resultStr += decodeHash[decodeFunctionID] + ' [' + String(valueBinStr.length) + ']: ' + valueBinStr + 'b = ' + String(parseInt(valueBinStr, 2)) + '\n'
+    resultStr.push(decodeHash[decodeFunctionID] + ' [' + String(valueBinStr.length) + ']: ' + valueBinStr + 'b = ' + String(parseInt(valueBinStr, 2)))
     decodeFunctionID = 0
     valueBinStr = ''
   }
@@ -35,15 +35,17 @@ function createDecodeHash (inputStr) {
 
   inputStr.split(/\r?\n/).forEach(function (line) {
     var lineSplit = line.match(/\[(\d+):(\d+)\] (.*)/)
-    var startBit = parseInt(lineSplit[1])
-    var stopBit = parseInt(lineSplit[2])
-    var decodeStrID = decodeHash.length
-    decodeHash[decodeStrID] = lineSplit[3]
-    if (Math.max(startBit, stopBit) > decodeVector.length - 1) {
-      decodeVector = Array((Math.max(startBit, stopBit) + 1) - decodeVector.length).fill(0).concat(decodeVector)
+    if (lineSplit!== null && lineSplit.length === 4) { // Check .match function returned correct values
+      var startBit = parseInt(lineSplit[1])
+      var stopBit = parseInt(lineSplit[2])
+      var decodeStrID = decodeHash.length
+      decodeHash[decodeStrID] = lineSplit[3]
+      if (Math.max(startBit, stopBit) > decodeVector.length - 1) {
+        decodeVector = Array((Math.max(startBit, stopBit) + 1) - decodeVector.length).fill(0).concat(decodeVector)
+      }
+      var sequenceLength = Math.abs(startBit - stopBit) + 1
+      Array.prototype.splice.apply(decodeVector, [Math.min(startBit, stopBit), sequenceLength].concat(Array(sequenceLength).fill(decodeStrID)))
     }
-    var sequenceLength = Math.abs(startBit - stopBit) + 1
-    Array.prototype.splice.apply(decodeVector, [Math.min(startBit, stopBit), sequenceLength].concat(Array(sequenceLength).fill(decodeStrID)))
   })
   console.log(decodeVector)
   console.log(decodeHash)
@@ -68,5 +70,3 @@ function test () {
   // Test input smaller than decoder
   console.log(decode([0, 0, 1, 1, 0, 1], testDecodeVector, testDecodeHash))
 }
-
-test()
