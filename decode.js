@@ -21,7 +21,7 @@ function decode (inputVector, decodeVector, decodeHash) {
       valueBinStr += String(inputVector[arrayIndex])
       arrayIndex++
     }
-    resultStr += decodeHash[decodeFunctionID] + ' [' + String(valueBinStr.length) + ']: ' + valueBinStr + 'b = ' + String(parseInt(valueBinStr,2)) + '\n'
+    resultStr += decodeHash[decodeFunctionID] + ' [' + String(valueBinStr.length) + ']: ' + valueBinStr + 'b = ' + String(parseInt(valueBinStr, 2)) + '\n'
     decodeFunctionID = 0
     valueBinStr = ''
   }
@@ -39,11 +39,11 @@ function createDecodeHash (inputStr) {
     var stopBit = parseInt(lineSplit[2])
     var decodeStrID = decodeHash.length
     decodeHash[decodeStrID] = lineSplit[3]
-    if (Math.max(startBit, stopBit) > decodeVector.length-1) {
-        decodeVector = Array((Math.max(startBit, stopBit) + 1) - decodeVector.length).fill(0).concat(decodeVector)
+    if (Math.max(startBit, stopBit) > decodeVector.length - 1) {
+      decodeVector = Array((Math.max(startBit, stopBit) + 1) - decodeVector.length).fill(0).concat(decodeVector)
     }
     var sequenceLength = Math.abs(startBit - stopBit) + 1
-    Array.prototype.splice.apply(decodeVector,[Math.min(startBit, stopBit),sequenceLength].concat(Array(sequenceLength).fill(decodeStrID)))
+    Array.prototype.splice.apply(decodeVector, [Math.min(startBit, stopBit), sequenceLength].concat(Array(sequenceLength).fill(decodeStrID)))
   })
   console.log(decodeVector)
   console.log(decodeHash)
