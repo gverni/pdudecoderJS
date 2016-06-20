@@ -1,0 +1,48 @@
+<html>
+<script src="jquery-3.0.0.js"></script>
+<script src="decode.js"></script>
+<body>
+<div id="inputForm">
+<p><label>Enter number (hex, decimal or binary)</label>
+<input id="inputVector"></input></p>
+<p> <label>Decoding imstructions:</label>
+<textarea id="decodeVector" rows="15" column="400">[32:0] Field 1</textarea>
+</p>
+<button id="decodeBtn">Decode</button>
+</div>
+<div id="result">
+</div>
+<script type="text/javascript">
+
+function createDecode () {
+  try {
+    var inputVectorStr = $('#inputVector').val()
+    if (inputVectorStr.split('').every(function (element) { return (element === '0' || element === '1')})) { // Input provided as binary
+        console.log('Input detected as binary')
+    } else if (inputVectorStr.match(/[0-9]*/)[0] === inputVectorStr.match(/[0-9]*/)['input']) { // Assuming the input is in decimal format
+        console.log('Input detected as decimal')
+        inputVectorStr = parseInt(inputVectorStr, 10).toString(2)
+    } else if (inputVectorStr.startsWith('0x') || (inputVectorStr.match(/[0-9|A-F|a-f]*/)[0] === inputVectorStr.match(/[0-9|A-F|a-f]*/)['input'])) { // Input provded as HEX number
+      console.log('Input detected as hex')
+      inputVectorStr = parseInt(inputVectorStr, 16).toString(2)
+    } else {
+      throw "Not a recognizible number"
+    }
+
+    $('#result').empty()
+    var decodeHashAr = createDecodeHash($('#decodeVector').val())
+    var decodedStr = decode(inputVectorStr.split('').map(Number), decodeHashAr[0], decodeHashAr[1])
+    decodedStr.forEach(function (line) {
+      $('#result').append('<p>' + line + '</p>')
+    })
+  } catch (err) {
+      $('#result').empty()
+      $('#result').append('<p>' + err + '</p>')
+  }
+}
+
+$("#decodeBtn").click(createDecode);
+
+</script>
+</body>
+</html>
