@@ -30,6 +30,7 @@ function decode (inputVector, decodeVector, decodeHash) {
 }
 
 function createDecodeHash (inputStr) {
+  // TODO: check validity of inputStr (e.g. overlapping regions)
   var decodeVector = []
   var decodeHash = ['Undecoded bit(s)']
 
@@ -47,6 +48,7 @@ function createDecodeHash (inputStr) {
       Array.prototype.splice.apply(decodeVector, [Math.min(startBit, stopBit), sequenceLength].concat(Array(sequenceLength).fill(decodeStrID)))
     }
   })
+  decodeVector = decodeVector.reverse()
   console.log(decodeVector)
   console.log(decodeHash)
   return [decodeVector, decodeHash]
