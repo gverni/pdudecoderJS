@@ -1,18 +1,54 @@
 <html>
+<head>
 <script src="jquery-3.0.0.js"></script>
 <script src="decode.js"></script>
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+<!-- Optional theme -->
+<link href="css/jumbotron-narrow.css" rel="stylesheet">
+<!-- Latest compiled and minified JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+</head>
 <body>
-<p>You can find some decode examples <a href='predefined.html'>here</a>
-<div id="inputForm">
-<p><label>Enter number (hex, decimal or binary)</label>
-<input id="inputVector"></input></p>
-<p> <label>Decoding imstructions:</label>
-<textarea id="decodeVector" rows="15" column="400">[32:0] Field 1</textarea>
-</p>
-<button id="decodeBtn">Decode</button>
-</div>
-<div id="result">
-</div>
+
+   <div class="container">
+      <div class="header clearfix">
+        <nav>
+          <ul class="nav nav-pills pull-right">
+            <li role="presentation"><a href="library.html">Library</a></li>
+            <li role="presentation"><a href="#">Contact</a></li>
+          </ul>
+        </nav>
+        <h3 class="text-muted">PDU decoder</h3>
+      </div>
+
+      <div class="jumbotron">
+        <h1>PDU decoder</h1>
+        <p class="lead">Type the number you want to decode and the decode instructions. </p>
+      </div>
+
+      <div class='row'>
+        <div class="col-lg-10">
+          <div id="inputForm" text-aling='center'>
+          <p><label>Enter number (hex, decimal or binary)</label></p>
+          <p><input id="inputVector" size="90"></input></p>
+          <p> <label>Decoding instructions. To select from a library of sample click <a href="library.html"> here</a></label></p>
+          <p><textarea id="decodeVector" rows="15" cols="90">[32:0] Field 1</textarea></p>
+          </div>
+          <p><button id="decodeBtn" class="btn btn-lg btn-success">Decode</button></p>
+        </div>
+      </div>
+      <div class='row'>
+        <div class ='col-lg-10' id="result">
+        </div>
+      </div>
+
+    <footer class="footer">
+      <p>&copy; 2016 Giuseppe Verni</p>
+    </footer>
+
+  </div> <!-- /container -->
+
 <script type="text/javascript">
 
 var getUrlParameter = function getUrlParameter(sParam) {
