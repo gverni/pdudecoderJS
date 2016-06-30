@@ -2,6 +2,7 @@
 <script src="jquery-3.0.0.js"></script>
 <script src="decode.js"></script>
 <body>
+<p>You can find some decode examples <a href='predefined.html'>here</a>
 <div id="inputForm">
 <p><label>Enter number (hex, decimal or binary)</label>
 <input id="inputVector"></input></p>
@@ -13,6 +14,21 @@
 <div id="result">
 </div>
 <script type="text/javascript">
+
+var getUrlParameter = function getUrlParameter(sParam) {
+    var sPageURL = decodeURIComponent(window.location.search.substring(1)),
+        sURLVariables = sPageURL.split('&'),
+        sParameterName,
+        i;
+
+    for (i = 0; i < sURLVariables.length; i++) {
+        sParameterName = sURLVariables[i].split('=');
+
+        if (sParameterName[0] === sParam) {
+            return sParameterName[1] === undefined ? true : sParameterName[1];
+        }
+    }
+};
 
 function createDecode () {
   try {
@@ -41,7 +57,14 @@ function createDecode () {
   }
 }
 
+var decodeArg = getUrlParameter('decode');
+if (decodeArg !== undefined) {
+  $('#decodeVector').val(decodeArg)
+}
+
 $("#decodeBtn").click(createDecode);
+
+
 
 </script>
 </body>
